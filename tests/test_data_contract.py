@@ -22,12 +22,12 @@ def test_target_has_no_missing_and_two_classes():
     assert y.nunique() >= 2
 
 
-def test_known_undocumented_columns_still_present():
-    # FN, FP y Age no están documentadas por UCI (ver docs/diccionario_datos.md):
-    # FN duplica Customer Value, FP no tiene definición confiable, y Age
-    # duplica Age Group. Las excluyo a mano en el notebook (DROP_COLUMNS).
+def test_known_undocumented_column_still_present():
+    # "Age" viene en el archivo oficial de UCI pero no está en su tabla de
+    # variables documentada (ver docs/diccionario_datos.md): duplica
+    # "Age Group" 1 a 1. La excluyo a mano en el notebook (DROP_COLUMNS).
     # Si esta prueba falla, es porque la fuente cambió su esquema y hay que
     # revisar de nuevo qué columnas retirar antes de reentrenar.
     columns = set(load_data().columns)
-    known_undocumented = {"FN", "FP", "Age"}
+    known_undocumented = {"Age"}
     assert known_undocumented <= columns

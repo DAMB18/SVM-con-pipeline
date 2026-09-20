@@ -2,7 +2,7 @@
 
 Fuente: [ficha UCI](https://archive.ics.uci.edu/dataset/563/iranian+churn+dataset) · Datos de una empresa de telecomunicaciones iraní, recolectados durante 12 meses. 3,150 filas, sin valores ausentes.
 
-Nota personal: al abrir el CSV real conté **16 columnas**, pero la tabla oficial de UCI solo documenta **13** (12 atributos + `Churn`). Las tres columnas extra (`Age`, `FN`, `FP`) vienen en el archivo pero no en la documentación oficial — las dejo registradas igual, con la evidencia de por qué las excluyo del modelo en el paso 7.
+Nota personal (y corrección): en mi primera exploración usé una copia de este dataset en un repositorio de GitHub de un tercero, no la descarga oficial de UCI, y esa copia traía **16 columnas** (dos de más, `FN` y `FP`, que ese usuario agregó por su cuenta — comprobé que `FN` era simplemente `Customer Value × 0.9`). Una vez que corrí `download_iranian_churn_dataset()` contra la URL oficial de UCI, el archivo real tiene **14 columnas**: las 13 documentadas (12 atributos + `Churn`) más `Age`, que sí viene en el archivo oficial aunque la tabla de variables de UCI no la liste aparte. Dejo esto anotado como lección: para la ficha y el diccionario hay que auditar el archivo que efectivamente se va a usar, no una copia de terceros, aunque parezca la misma fuente.
 
 ## Columnas documentadas por UCI
 
@@ -22,13 +22,11 @@ Nota personal: al abrir el CSV real conté **16 columnas**, pero la tabla oficia
 | `Customer Value` | Valor calculado del cliente (métrica interna de la empresa) | Numérico, continuo | Calculado por el operador | Disponible antes de la fuga | Ninguna | Bajo |
 | `Churn` | **Target.** Si el cliente se fue o no | Binario: 1 = fuga, 0 = no fuga | Definido por la empresa al cierre del período | Es el resultado, no un predictor | — | — |
 
-## Columnas presentes en el archivo pero no documentadas por UCI
+## Columna presente en el archivo oficial pero no documentada por UCI
 
 | Columna | Lo que encontré al auditarla | Decisión |
 |---|---|---|
 | `Age` | Solo tiene 5 valores únicos (15, 25, 30, 45, 55) que corresponden exactamente, uno a uno, con los 5 grupos de `Age Group`. Es la misma información repetida en otra forma. | Excluir — redundante con `Age Group`, que sí está documentada. |
-| `FN` | Comprobé fila por fila: `FN = Customer Value × 0.9` exactamente. Es una transformación lineal determinística de `Customer Value`, no información nueva. | Excluir — duplica `Customer Value` (multicolinealidad perfecta, cero valor informativo adicional). |
-| `FP` | No encontré una relación clara con ninguna otra columna, y UCI no explica qué mide. No puedo confirmar su definición ni que esté disponible de forma confiable en un escenario real de predicción. | Excluir — no documentada, no puedo justificar semánticamente qué representa ni de dónde sale. |
 
 ## Otros hallazgos de la auditoría
 
